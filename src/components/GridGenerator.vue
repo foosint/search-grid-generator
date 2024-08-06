@@ -14,6 +14,7 @@ import Download from './Download.vue';
             <Map />
             <Form />
             <Download />
+            <Upload />
         </v-responsive>
     </v-container>
 </template>
