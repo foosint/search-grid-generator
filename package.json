@@ -18,6 +18,7 @@
     "leaflet.fullscreen": "^3.0.2",
     "pinia": "^2.2.0",
     "roboto-fontface": "*",
+    "shpjs": "^6.1.0",
     "vue": "^3.4.31",
     "vuetify": "^3.6.11"
   },

@@ -129,3 +129,24 @@ export const createPolygonFromCoordinates = (p1, p2) => {
     const rectanglePolygon = turf.bboxPolygon(bbox);
     return rectanglePolygon;
 };
+
+// Function to convert objects to Turf.js features and combine them
+export const combineGeometries = (objects) => {
+    try {
+        // convert to turf features
+        const features = objects.map((obj) => turf.feature(obj, {}));
+        // combine features
+        const combined = turf.union(turf.featureCollection(features));
+        // simplify the polygon, otherwise it could to too heavy for leaflet
+        // and/or the grid generator
+        const options = { tolerance: 0.01, highQuality: true };
+        const simplified = turf.simplify(combined, options);
+        // TODO: cound the coordinates in each feature
+        // if still to high, throw an error and stop
+        // console.log(simplified);
+        return simplified;
+    } catch (error) {
+        console.error('Error combining geometries:', error);
+        throw error;
+    }
+};

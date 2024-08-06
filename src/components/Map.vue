@@ -27,6 +27,8 @@ import { useJumpStore } from '@/stores/jumpStore';
 import { useMapStore } from '@/stores/mapStore';
 import { useCoordinatesStore } from '@/stores/coordinatesStore';
 import * as mapUtils from '../lib/maputils';
+// TMP
+import * as turf from '@turf/turf';
 
 const gridSizeStore = useGridSizeStore();
 const jumpStore = useJumpStore();
@@ -82,6 +84,16 @@ watch(
             const p2 = c2.split(',');
             onCustomCoordinates(p1, p2);
         }
+    },
+    { deep: true },
+);
+
+// watch for shp change
+watch(
+    () => mapStore.shp,
+    (newShp, oldShp) => {
+        console.log('Object changed:', newShp);
+        onShp(newShp);
     },
     { deep: true },
 );
@@ -191,6 +203,23 @@ const clearAll = () => {
 // Receives the Leaflet.Polygon and the control instance as arguments.
 const onPolygonReady = (polygon) => {
     state.drawing = polygon; // update the state with the current polygon
+};
+
+const onShp = (shpGeoJSON) => {
+    console.log('onshp');
+    // clean map
+    clearAll();
+    // combine the geometries of the shp geojson to a single polygon
+    const combined = mapUtils.combineGeometries(shpGeoJSON);
+
+    const geojson = L.geoJSON(combined, { color: 'blue' });
+    geojson.addTo(state.map);
+    state.map.fitBounds(geojson.getBounds());
+    state.drawing = geojson;
+    // set local state
+    state.isCustomPoly = true;
+    // create grid
+    updateGrid();
 };
 
 // if we receive 2 valid coordinates from the form input

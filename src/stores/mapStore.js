@@ -5,6 +5,7 @@ export const useMapStore = defineStore('map', {
     state: () => ({
         grid: null,
         isPoly: false,
+        shp: null,
     }),
 
     // actions: methods that can change state and contain business logic
@@ -14,6 +15,9 @@ export const useMapStore = defineStore('map', {
         },
         updateIsPoly(isPoly) {
             this.isPoly = isPoly;
+        },
+        updateShp(newShp) {
+            this.shp = newShp;
         },
     },
 });
